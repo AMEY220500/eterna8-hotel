@@ -3,6 +3,13 @@
 [build]
   publish = "."
 
+# Redirect root to index-simple.html
+[[redirects]]
+  from = "/"
+  to = "/index-simple.html"
+  status = 200
+
+# Redirect all other routes to index-simple.html (for SPA routing)
 [[redirects]]
   from = "/*"
   to = "/index-simple.html"
