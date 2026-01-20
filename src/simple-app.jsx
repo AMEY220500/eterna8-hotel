@@ -305,7 +305,6 @@ const ContactForm = () => {
     message: "",
   });
   const [errors, setErrors] = useState({});
-  const [submitted, setSubmitted] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -339,27 +338,9 @@ const ContactForm = () => {
     if (Object.keys(newErrors).length > 0) {
       e.preventDefault();
       setErrors(newErrors);
-    } else {
-      // Form is valid, Netlify will handle the submission
-      setSubmitted(true);
     }
+    // If no errors, form will submit normally to Netlify
   };
-
-  if (submitted) {
-    return (
-      <div className="contact-form success-message">
-        <h3>Thank You!</h3>
-        <p>
-          Your booking inquiry has been submitted successfully. We'll contact
-          you shortly at {formData.email}.
-        </p>
-        <p>
-          📞 Or call us directly at:{" "}
-          <a href="tel:+1234567890">+1 (234) 567-890</a>
-        </p>
-      </div>
-    );
-  }
 
   return (
     <form
