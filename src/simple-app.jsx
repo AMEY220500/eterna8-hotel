@@ -30,7 +30,7 @@ const FaStar = () => <i className="fas fa-star"></i>;
 // Simple Router
 const Router = ({ children }) => {
   const [currentPath, setCurrentPath] = useState(
-    window.location.hash.slice(1) || "/"
+    window.location.hash.slice(1) || "/",
   );
 
   useEffect(() => {
@@ -548,7 +548,7 @@ const HomePage = () => {
       <Hero
         title="Welcome to ETERNA 8 Hotel by YSR"
         subtitle="Experience luxury and comfort at its finest"
-        image="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=1600"
+        image="public/Hotel.jpg"
         height="700px"
       />
 
@@ -567,7 +567,7 @@ const HomePage = () => {
             </div>
             <div className="welcome-image">
               <img
-                src="https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=600"
+                src="public/OuterHotel.jpg"
                 alt="Hotel Lobby"
               />
             </div>
@@ -699,7 +699,7 @@ const RoomsPage = () => {
       filtered = [...filtered].sort((a, b) => b.price - a.price);
     else if (sortBy === "featured")
       filtered = [...filtered].sort(
-        (a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0)
+        (a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0),
       );
     return filtered;
   };
