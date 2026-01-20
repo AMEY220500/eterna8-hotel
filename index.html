@@ -42,6 +42,29 @@
   <body>
     <div id="root"></div>
 
+    <!-- Hidden form for Netlify detection - DO NOT REMOVE -->
+    <form name="hotel-contact" netlify netlify-honeypot="bot-field" hidden>
+      <input type="text" name="name" />
+      <input type="email" name="email" />
+      <input type="tel" name="phone" />
+      <input type="date" name="checkIn" />
+      <input type="date" name="checkOut" />
+      <select name="guests">
+        <option value="1">1 Guest</option>
+        <option value="2">2 Guests</option>
+        <option value="3">3 Guests</option>
+        <option value="4">4 Guests</option>
+        <option value="5">5+ Guests</option>
+      </select>
+      <select name="roomType">
+        <option value="standard">Standard Room</option>
+        <option value="deluxe">Deluxe Room</option>
+        <option value="suite">Suite</option>
+        <option value="family">Family Room</option>
+      </select>
+      <textarea name="message"></textarea>
+    </form>
+
     <!-- Load components -->
     <script type="text/babel" src="./src/simple-app.jsx"></script>
   </body>
