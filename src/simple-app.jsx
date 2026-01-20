@@ -335,27 +335,13 @@ const ContactForm = () => {
   };
 
   const handleSubmit = (e) => {
-    e.preventDefault();
     const newErrors = validate();
-
-    if (Object.keys(newErrors).length === 0) {
-      console.log("Form submitted:", formData);
-      setSubmitted(true);
-      setTimeout(() => {
-        setFormData({
-          name: "",
-          email: "",
-          phone: "",
-          checkIn: "",
-          checkOut: "",
-          guests: "1",
-          roomType: "standard",
-          message: "",
-        });
-        setSubmitted(false);
-      }, 3000);
-    } else {
+    if (Object.keys(newErrors).length > 0) {
+      e.preventDefault();
       setErrors(newErrors);
+    } else {
+      // Form is valid, Netlify will handle the submission
+      setSubmitted(true);
     }
   };
 
@@ -364,8 +350,8 @@ const ContactForm = () => {
       <div className="contact-form success-message">
         <h3>Thank You!</h3>
         <p>
-          We've received your booking inquiry. Our team will contact you
-          shortly.
+          Your booking inquiry has been submitted successfully. We'll contact
+          you shortly at {formData.email}.
         </p>
         <p>
           📞 Or call us directly at:{" "}
@@ -376,7 +362,16 @@ const ContactForm = () => {
   }
 
   return (
-    <form className="contact-form" onSubmit={handleSubmit}>
+    <form
+      className="contact-form"
+      onSubmit={handleSubmit}
+      name="hotel-contact"
+      method="POST"
+      data-netlify="true"
+      data-netlify-honeypot="bot-field"
+    >
+      <input type="hidden" name="form-name" value="hotel-contact" />
+      <input type="hidden" name="bot-field" />
       <div className="form-row">
         <div className="form-group">
           <label htmlFor="name">Full Name *</label>
@@ -566,10 +561,7 @@ const HomePage = () => {
               </Link>
             </div>
             <div className="welcome-image">
-              <img
-                src="public/OuterHotel.jpg"
-                alt="Hotel Lobby"
-              />
+              <img src="public/OuterHotel.jpg" alt="Hotel Lobby" />
             </div>
           </div>
         </div>
