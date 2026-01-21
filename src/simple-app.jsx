@@ -111,7 +111,7 @@ const Header = ({ currentPath }) => {
         </nav>
 
         <div className="header-actions">
-          <a href="tel:+1234567890" className="phone-button">
+          <a href="tel:+94770778893" className="phone-button">
             <FaPhone /> Call Now
           </a>
           <button
@@ -191,15 +191,21 @@ const Footer = () => {
             <ul className="contact-info">
               <li>
                 <FaMapMarkerAlt />
-                <span>123 Hotel Street, City, Country</span>
+                <a
+                  href="https://www.google.com/maps/search/?api=1&query=Horana,+Sri+Lanka"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Horana, Sri Lanka
+                </a>
               </li>
               <li>
                 <FaPhone />
-                <a href="tel:+1234567890">+1 (234) 567-890</a>
+                <a href="tel:+94770778893">+94 (77) 077 8893</a>
               </li>
               <li>
                 <FaEnvelope />
-                <a href="mailto:info@grandhotel.com">info@grandhotel.com</a>
+                <a href="mailto:saaraash88@gmail.com">saaraash88@gmail.com</a>
               </li>
             </ul>
           </div>
@@ -283,7 +289,7 @@ const RoomCard = ({ room }) => {
             <span className="price-amount">${room.price}</span>
             <span className="price-period">/night</span>
           </div>
-          <a href="tel:+1234567890" className="btn btn-primary">
+          <a href="tel:+94770778893" className="btn btn-primary">
             Call to Book
           </a>
         </div>
@@ -648,8 +654,8 @@ const HomePage = () => {
             <h2>Ready to Book Your Stay?</h2>
             <p>Contact us today to reserve your room</p>
             <div className="cta-buttons">
-              <a href="tel:+1234567890" className="btn btn-primary btn-large">
-                Call Now: +1 (234) 567-890
+              <a href="tel:+94770778893" className="btn btn-primary btn-large">
+                Call Now: +94 (77) 077 8893
               </a>
               <Link to="/contact" className="btn btn-outline btn-large">
                 Send Inquiry
@@ -1000,7 +1006,7 @@ const ContactPage = () => {
                 <div className="info-details">
                   <h4>Phone</h4>
                   <p>
-                    <a href="tel:+1234567890">+1 (234) 567-890</a>
+                    <a href="tel:+94770778893">+94 (77) 077 8893</a>
                   </p>
                 </div>
               </div>
@@ -1011,7 +1017,9 @@ const ContactPage = () => {
                 <div className="info-details">
                   <h4>Email</h4>
                   <p>
-                    <a href="mailto:info@grandhotel.com">info@grandhotel.com</a>
+                    <a href="mailto:saaraash88@gmail.com">
+                      saaraash88@gmail.com
+                    </a>
                   </p>
                 </div>
               </div>
@@ -1021,7 +1029,15 @@ const ContactPage = () => {
                 </div>
                 <div className="info-details">
                   <h4>Address</h4>
-                  <p>123 Hotel Street, City, Country</p>
+                  <p>
+                    <a
+                      href="https://www.google.com/maps/search/?api=1&query=Horana,+Sri+Lanka"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Horana, Sri Lanka
+                    </a>
+                  </p>
                 </div>
               </div>
             </div>
