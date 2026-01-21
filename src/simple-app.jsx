@@ -305,6 +305,8 @@ const ContactForm = () => {
     message: "",
   });
   const [errors, setErrors] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState(null); // 'success' or 'error'
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -333,149 +335,225 @@ const ContactForm = () => {
     return newErrors;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
     const newErrors = validate();
     if (Object.keys(newErrors).length > 0) {
-      e.preventDefault();
       setErrors(newErrors);
+      return;
     }
-    // If no errors, form will submit normally to Netlify
+
+    setIsSubmitting(true);
+    setSubmitStatus(null);
+
+    try {
+      const response = await fetch("/.netlify/functions/submit-form", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        setSubmitStatus("success");
+        setFormData({
+          name: "",
+          email: "",
+          phone: "",
+          checkIn: "",
+          checkOut: "",
+          guests: "1",
+          roomType: "standard",
+          message: "",
+        });
+      } else {
+        setSubmitStatus("error");
+      }
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      setSubmitStatus("error");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
-    <form
-      className="contact-form"
-      onSubmit={handleSubmit}
-      name="hotel-contact"
-      method="POST"
-      data-netlify="true"
-      data-netlify-honeypot="bot-field"
-    >
-      <input type="hidden" name="form-name" value="hotel-contact" />
-      <input type="hidden" name="bot-field" />
-      <div className="form-row">
-        <div className="form-group">
-          <label htmlFor="name">Full Name *</label>
-          <input
-            type="text"
-            id="name"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            className={errors.name ? "error" : ""}
-          />
-          {errors.name && <span className="error-message">{errors.name}</span>}
+    <div>
+      {submitStatus === "success" && (
+        <div
+          className="success-message"
+          style={{
+            padding: "20px",
+            backgroundColor: "#d4edda",
+            color: "#155724",
+            borderRadius: "5px",
+            marginBottom: "20px",
+            border: "1px solid #c3e6cb",
+          }}
+        >
+          <h3>✅ Thank You!</h3>
+          <p>
+            Your booking inquiry has been submitted successfully. We'll contact
+            you shortly at {formData.email || "your email"}.
+          </p>
+        </div>
+      )}
+
+      {submitStatus === "error" && (
+        <div
+          className="error-message"
+          style={{
+            padding: "20px",
+            backgroundColor: "#f8d7da",
+            color: "#721c24",
+            borderRadius: "5px",
+            marginBottom: "20px",
+            border: "1px solid #f5c6cb",
+          }}
+        >
+          <h3>❌ Submission Failed</h3>
+          <p>
+            There was an error submitting your inquiry. Please try again or call
+            us directly at +1 (234) 567-890.
+          </p>
+        </div>
+      )}
+
+      <form className="contact-form" onSubmit={handleSubmit}>
+        <div className="form-row">
+          <div className="form-group">
+            <label htmlFor="name">Full Name *</label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              className={errors.name ? "error" : ""}
+            />
+            {errors.name && (
+              <span className="error-message">{errors.name}</span>
+            )}
+          </div>
+          <div className="form-group">
+            <label htmlFor="email">Email *</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              className={errors.email ? "error" : ""}
+            />
+            {errors.email && (
+              <span className="error-message">{errors.email}</span>
+            )}
+          </div>
+        </div>
+        <div className="form-row">
+          <div className="form-group">
+            <label htmlFor="phone">Phone Number *</label>
+            <input
+              type="tel"
+              id="phone"
+              name="phone"
+              value={formData.phone}
+              onChange={handleChange}
+              className={errors.phone ? "error" : ""}
+            />
+            {errors.phone && (
+              <span className="error-message">{errors.phone}</span>
+            )}
+          </div>
+          <div className="form-group">
+            <label htmlFor="guests">Number of Guests</label>
+            <select
+              id="guests"
+              name="guests"
+              value={formData.guests}
+              onChange={handleChange}
+            >
+              <option value="1">1 Guest</option>
+              <option value="2">2 Guests</option>
+              <option value="3">3 Guests</option>
+              <option value="4">4 Guests</option>
+              <option value="5">5+ Guests</option>
+            </select>
+          </div>
+        </div>
+        <div className="form-row">
+          <div className="form-group">
+            <label htmlFor="checkIn">Check-in Date *</label>
+            <input
+              type="date"
+              id="checkIn"
+              name="checkIn"
+              value={formData.checkIn}
+              onChange={handleChange}
+              min={new Date().toISOString().split("T")[0]}
+              className={errors.checkIn ? "error" : ""}
+            />
+            {errors.checkIn && (
+              <span className="error-message">{errors.checkIn}</span>
+            )}
+          </div>
+          <div className="form-group">
+            <label htmlFor="checkOut">Check-out Date *</label>
+            <input
+              type="date"
+              id="checkOut"
+              name="checkOut"
+              value={formData.checkOut}
+              onChange={handleChange}
+              min={formData.checkIn || new Date().toISOString().split("T")[0]}
+              className={errors.checkOut ? "error" : ""}
+            />
+            {errors.checkOut && (
+              <span className="error-message">{errors.checkOut}</span>
+            )}
+          </div>
         </div>
         <div className="form-group">
-          <label htmlFor="email">Email *</label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            className={errors.email ? "error" : ""}
-          />
-          {errors.email && (
-            <span className="error-message">{errors.email}</span>
-          )}
-        </div>
-      </div>
-      <div className="form-row">
-        <div className="form-group">
-          <label htmlFor="phone">Phone Number *</label>
-          <input
-            type="tel"
-            id="phone"
-            name="phone"
-            value={formData.phone}
-            onChange={handleChange}
-            className={errors.phone ? "error" : ""}
-          />
-          {errors.phone && (
-            <span className="error-message">{errors.phone}</span>
-          )}
-        </div>
-        <div className="form-group">
-          <label htmlFor="guests">Number of Guests</label>
+          <label htmlFor="roomType">Preferred Room Type</label>
           <select
-            id="guests"
-            name="guests"
-            value={formData.guests}
+            id="roomType"
+            name="roomType"
+            value={formData.roomType}
             onChange={handleChange}
           >
-            <option value="1">1 Guest</option>
-            <option value="2">2 Guests</option>
-            <option value="3">3 Guests</option>
-            <option value="4">4 Guests</option>
-            <option value="5">5+ Guests</option>
+            <option value="standard">Standard Room</option>
+            <option value="deluxe">Deluxe Room</option>
+            <option value="suite">Suite</option>
+            <option value="family">Family Room</option>
           </select>
         </div>
-      </div>
-      <div className="form-row">
         <div className="form-group">
-          <label htmlFor="checkIn">Check-in Date *</label>
-          <input
-            type="date"
-            id="checkIn"
-            name="checkIn"
-            value={formData.checkIn}
+          <label htmlFor="message">Special Requests (Optional)</label>
+          <textarea
+            id="message"
+            name="message"
+            rows="4"
+            value={formData.message}
             onChange={handleChange}
-            min={new Date().toISOString().split("T")[0]}
-            className={errors.checkIn ? "error" : ""}
+            placeholder="Any special requests or requirements..."
           />
-          {errors.checkIn && (
-            <span className="error-message">{errors.checkIn}</span>
-          )}
         </div>
-        <div className="form-group">
-          <label htmlFor="checkOut">Check-out Date *</label>
-          <input
-            type="date"
-            id="checkOut"
-            name="checkOut"
-            value={formData.checkOut}
-            onChange={handleChange}
-            min={formData.checkIn || new Date().toISOString().split("T")[0]}
-            className={errors.checkOut ? "error" : ""}
-          />
-          {errors.checkOut && (
-            <span className="error-message">{errors.checkOut}</span>
-          )}
-        </div>
-      </div>
-      <div className="form-group">
-        <label htmlFor="roomType">Preferred Room Type</label>
-        <select
-          id="roomType"
-          name="roomType"
-          value={formData.roomType}
-          onChange={handleChange}
+        <button
+          type="submit"
+          className="btn btn-primary btn-full"
+          disabled={isSubmitting}
         >
-          <option value="standard">Standard Room</option>
-          <option value="deluxe">Deluxe Room</option>
-          <option value="suite">Suite</option>
-          <option value="family">Family Room</option>
-        </select>
-      </div>
-      <div className="form-group">
-        <label htmlFor="message">Special Requests (Optional)</label>
-        <textarea
-          id="message"
-          name="message"
-          rows="4"
-          value={formData.message}
-          onChange={handleChange}
-          placeholder="Any special requests or requirements..."
-        />
-      </div>
-      <button type="submit" className="btn btn-primary btn-full">
-        Submit Inquiry
-      </button>
-      <p className="form-note">
-        * Required fields. We'll call you to confirm your booking.
-      </p>
-    </form>
+          {isSubmitting ? "Submitting..." : "Submit Inquiry"}
+        </button>
+        <p className="form-note">
+          * Required fields. We'll call you to confirm your booking.
+        </p>
+      </form>
+    </div>
   );
 };
 
